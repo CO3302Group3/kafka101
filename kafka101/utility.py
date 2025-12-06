@@ -56,6 +56,7 @@ def publish_message(
         publisher.publish(
             value,
             wait_for_delivery=wait_for_delivery,
+            wait_timeout=5 if wait_for_delivery else 0,
             **publish_options,
         )
 
