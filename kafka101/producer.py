@@ -66,14 +66,23 @@ class KafkaPublisher:
         attempts = 0
         while True:
             try:
-                self._producer.produce(
-                    topic=self.topic,
-                    value=payload,
-                    key=key_payload,
-                    headers=header_list,
-                    partition=partition,
-                    on_delivery=callback,
-                )
+                if partition is None:
+                    self._producer.produce(
+                        topic=self.topic,
+                        value=payload,
+                        key=key_payload,
+                        headers=header_list,
+                        on_delivery=callback,
+                    )
+                else:
+                    self._producer.produce(
+                        topic=self.topic,
+                        value=payload,
+                        key=key_payload,
+                        headers=header_list,
+                        partition=partition,
+                        on_delivery=callback,
+                    )
                 break
             except BufferError:
                 attempts += 1
@@ -111,6 +120,8 @@ class KafkaPublisher:
         """Flush pending messages and raise if any remain."""
         if self._producer is None:
             raise KafkaClientError("Producer is not initialised")
+        if timeout is None:
+            timeout = 0
         remaining = self._producer.flush(timeout)
         if remaining:
             raise KafkaDeliveryError(f"Failed to deliver {remaining} message(s)")
