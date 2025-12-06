@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kafka101"
+version = "0.1.0"
+description = "Kafka convenience wrappers used across the CO330 microservices."
+authors = [{name = "CO3302Group3"}]
+readme = "README.md"
+requires-python = ">=3.9"
+dependencies = [
+    "confluent-kafka>=2.3",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["kafka101"]
